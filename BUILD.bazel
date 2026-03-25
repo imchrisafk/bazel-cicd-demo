@@ -10,6 +10,5 @@ py_test(
     name = "test_hello",
     srcs = ["test_hello.py"],
     deps = [":hello"],
-    python_version = "PY3",
-    srcs_version = "PY3",
+    size = "small",
     )
