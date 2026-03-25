@@ -20,6 +20,8 @@ jobs:
     needs: test
     if: failure()
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - name: Post failure comment on PR
         uses: peter-evans/create-or-update-comment@v4
