@@ -1,0 +1,33 @@
+name: CI - Bazel Tests
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Bazelisk
+        uses: bazelbuild/setup-bazelisk@v3
+
+      - name: Run Bazel tests
+        run: bazel test //... --test_output=errors
+
+  notify-failure:
+    needs: test
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post failure comment on PR
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ❌ **Bazel tests failed!**
+
+            Please check the "CI - Bazel Tests" workflow logs for details.
+            Fix the failing tests before requesting a merge.
+          token: ${{ secrets.GITHUB_TOKEN }}
